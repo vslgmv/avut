@@ -145,9 +145,6 @@ dmypy.json
 
 .mypy_cache
 
-#static folders
-static/
-
 #media files
 media/
 
