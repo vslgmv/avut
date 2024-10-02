@@ -1,0 +1,79 @@
+{% load static %}
+<a href="{% url 'pages:index' %}" class="flex justify-between items-center">
+    <div class="flex justify-start items-center gap-2">
+        <img src="{% static 'img/logo.webp' %}" class="w-6">
+        <p class="text-">Ulug`nor tumani</p>
+    </div>
+    <div class="flex justify-end items-center gap-4">
+        <div id="weather" class="flex items-center gap-2">
+            <i id="weather-icon" class="fa"></i>
+            <p id="weather-description"></p>
+        </div>
+        <div class="flex items-center gap-2">
+            <i class="fa-solid fa-clock"></i>
+            <p id="time"></p>
+        </div>
+    </div>
+</a>
+
+<script>
+    function updateTime() {
+        const now = new Date();
+        
+        const uzbekistanTime = new Date(now.getTime() + (2 * 60 * 60 * 1000));
+        
+        const hours = String(uzbekistanTime.getHours()).padStart(2, '0');
+        const minutes = String(uzbekistanTime.getMinutes()).padStart(2, '0');
+        
+        document.getElementById('time').textContent = `${hours}:${minutes}`;
+    }
+
+    async function getWeather() {
+        const apiKey = '501d47e8906ca33128b933e9831b4602';
+        const city = 'Andijan';
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+        
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+            updateWeather(data);
+        } catch (error) {
+            console.error('Ошибка:', error);
+        }
+    }
+
+    function updateWeather(data) {
+        const weatherDescription = data.weather[0].main;
+        const weatherIcon = document.getElementById('weather-icon');
+
+        switch (weatherDescription) {
+            case 'Clear':
+                weatherIcon.className = 'fa fa-sun text-yellow-500';
+                break;
+            case 'Clouds':
+                weatherIcon.className = 'fa fa-cloud text-gray-500';
+                break;
+            case 'Rain':
+                weatherIcon.className = 'fa fa-cloud-showers-heavy text-blue-500';
+                break;
+            case 'Snow':
+                weatherIcon.className = 'fa fa-snowflake text-white';
+                break;
+            case 'Thunderstorm':
+                weatherIcon.className = 'fa fa-bolt text-yellow-400';
+                break;
+            default:
+                weatherIcon.className = 'fa fa-question-circle text-gray-400';
+        }
+
+        const temperature = Math.round(data.main.temp);
+        document.getElementById('weather-description').textContent = `${temperature}°C`;
+    }
+
+    window.onload = function() {
+        updateTime();
+        getWeather();
+        setInterval(updateTime, 60000);
+    };
+</script>

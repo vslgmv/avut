@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Ulug`nor Tumani | {{ post.text }}{% endblock title %}
+{% block content %}
+<div class="bg-white rounded-lg mb-10 shadow-xl">
+    <div class="aspect-w-16 aspect-h-9 pb-2">
+        <img src="{{ post.image.url }}" class="rounded-lg rounded-b-none object-cover">
+    </div>
+    <div class="p-4">
+        {% if post.image %}
+        {% endif %}
+        <div class="flex justify-start items-center text-xs gap-4">
+            <p><i class="fa-solid fa-eye"></i> {{ post.views }}</p>
+            <p><i class="fa-regular fa-calendar"></i> {{ post.pub_date|date:"d E Y, H:i" }}</p>
+        </div>
+        <h2 class="my-2">{{ post.title }}</h2>
+        <p class="text-xs mt-2">{{ post.text }}</p>
+    </div>
+</div>
+{% endblock content %}
